@@ -3,7 +3,7 @@
 	<description>OSX JInput Native Plugin</description>
 
 	<target name="init">
-		<mkdir dir="target/natives/x86_64"/>
+		<mkdir dir="target/natives/arm64"/>
 	</target>
 
 	<target name="compile">
@@ -17,7 +17,7 @@
 	
 	<target name="link">
 		<apply dir="${objdir}" parallel="true" executable="${linker}" os="Mac OS X" failonerror="true" skipemptyfilesets="true">
-			<arg line="${linkerflags} -dynamiclib -o ${libname} -framework JavaVM -framework CoreFoundation -framework IOKit -framework CoreServices"/>
+			<arg line="${linkerflags} -dynamiclib -o ${libname} -framework CoreFoundation -framework IOKit -framework CoreServices -L/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/lib"/>
 			<fileset dir="${objdir}" includes="*.o"/>
 		</apply>
 		<apply dir="${objdir}" executable="strip" os="Mac OS X" failonerror="true">
@@ -27,26 +27,26 @@
 	</target>
 	
 	<target name="compileNativeJinputLib" depends="init">
-		<property name="x86_64_sdkroot" location="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk"/>
-		<property name="x86_64_flags" value="-isysroot ${x86_64_sdkroot} -arch x86_64 -mmacosx-version-min=10.5"/>
+		<property name="arm64_sdkroot" location="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"/>
+		<property name="arm64_flags" value="-isysroot ${arm64_sdkroot} -arch arm64 -mmacosx-version-min=10.5 -I/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/include/ -I/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/include/darwin/"/>
 		<antcall target="compile">
-			<param name="dstdir" location="target/natives/x86_64"/>
+			<param name="dstdir" location="target/natives/arm64"/>
 			<param name="compiler" value="gcc"/>
-			<param name="sdkroot" location="${x86_64_sdkroot}"/>
-			<param name="cflags" value="${x86_64_flags}"/>
+			<param name="sdkroot" location="${arm64_sdkroot}"/>
+			<param name="cflags" value="${arm64_flags}"/>
 		</antcall>
 		<antcall target="link">
-			<param name="objdir" location="target/natives/x86_64"/>
-			<param name="libname" value="libjinput-osx-x86_64.jnilib"/>
+			<param name="objdir" location="target/natives/arm64"/>
+			<param name="libname" value="libjinput-osx-arm64.jnilib"/>
 			<param name="linker" value="gcc"/>
-			<param name="linkerflags" value="${x86_64_flags}"/>
+			<param name="linkerflags" value="${arm64_flags}"/>
 		</antcall>
 		<apply dir="target/natives" parallel="true" executable="lipo" os="Mac OS X" failonerror="true" skipemptyfilesets="true" >
 			<arg value="-create"/>
 			<srcfile/>
 			<arg value="-output"/>
 			<arg path="target/natives/libjinput-osx.jnilib"/>
-			<fileset file="target/natives/x86_64/libjinput-osx-x86_64.jnilib"/>
+			<fileset file="target/natives/arm64/libjinput-osx-arm64.jnilib"/>
 		</apply>
 	</target>
 </project>

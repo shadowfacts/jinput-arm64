@@ -56,10 +56,10 @@
     <modules>
         <module>coreAPI</module>
         <module>plugins</module>
-        <module>applet</module>
-        <module>uberjar</module>
-        <module>examples</module>
-        <module>tests</module>
+        <!-- <module>applet</module> -->
+        <!-- <module>uberjar</module> -->
+        <!-- <module>examples</module> -->
+        <!-- <module>tests</module> -->
     </modules>
 
     <build>
@@ -72,7 +72,7 @@
                         <showDeprecation>true</showDeprecation>
                         <showWarnings>true</showWarnings>
                         <compilerArgs>
-                            <arg>-Werror</arg>
+                            <!-- <arg>-Werror</arg> -->
                             <arg>-Xlint:all,-options</arg>
                             <arg>-h</arg>
                             <arg>${project.build.directory}/generated-sources/natives</arg>
